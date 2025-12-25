@@ -62,24 +62,42 @@
     <!-- CTA -->
     <div class="flex flex-col md:flex-row md:justify-start pt-12 gap-x-6 gap-y-6 items-center justify-center">
       {% if section.settings.product != blank %}
-        <form action="/cart/add" method="post" enctype="multipart/form-data" class="w-full md:w-auto">
-          <input type="hidden" name="id" value="{{ section.settings.product.selected_or_first_available_variant.id }}" id="product-variant-id">
-          <input type="hidden" name="quantity" value="1" id="product-quantity">
-          <button type="submit" class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto buy-button">
+        {% assign product = section.settings.product %}
+        {% if product.available %}
+          <form action="/cart/add" method="post" enctype="multipart/form-data" class="w-full md:w-auto" id="product-form-{{ section.id }}">
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="product-variant-id">
+            <input type="hidden" name="quantity" value="1" id="product-quantity">
+            <button type="submit" class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto buy-button">
+              <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
+                {{ section.settings.buy_button_text | default: "comprar" }}
+              </span>
+            </button>
+          </form>
+        {% else %}
+          <a href="{{ product.url }}" class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto text-center">
+            <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
+              {{ section.settings.buy_button_text | default: "ver producto" }}
+            </span>
+          </a>
+        {% endif %}
+      {% elsif section.settings.product_url != blank %}
+        {% assign product_url = section.settings.product_url %}
+        {% if product_url contains '/products/' or product_url contains shop.url %}
+          <a href="{{ product_url }}" class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto text-center">
+            <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
+              {{ section.settings.buy_button_text | default: "comprar" }}
+            </span>
+          </a>
+        {% else %}
+          <button class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto opacity-50 cursor-not-allowed" disabled>
             <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
               {{ section.settings.buy_button_text | default: "comprar" }}
             </span>
           </button>
-        </form>
-      {% elsif section.settings.product_url != blank %}
-        <a href="{{ section.settings.product_url }}" class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto text-center">
-          <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
-            {{ section.settings.buy_button_text | default: "comprar" }}
-          </span>
-        </a>
+        {% endif %}
       {% else %}
-        <button class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto" disabled>
-          <span class="uppercase text-xs font-medium tracking-widest z-10 relative opacity-50">
+        <button class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto opacity-50 cursor-not-allowed" disabled>
+          <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
             {{ section.settings.buy_button_text | default: "comprar" }}
           </span>
         </button>
@@ -105,7 +123,7 @@
       "type": "url",
       "id": "product_url",
       "label": "Product URL (Alternative)",
-      "info": "Alternative: Link to product page if product picker is not used"
+      "info": "Alternative: Link to product page if product picker is not used. Must be a valid Shopify product URL (e.g., /products/product-handle)"
     },
     {
       "type": "image_picker",
