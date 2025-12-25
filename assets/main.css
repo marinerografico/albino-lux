@@ -10,6 +10,15 @@ body {
   cursor: default;
 }
 
+/* Ensure content doesn't get cut by fixed navigation */
+#main-content {
+  padding-top: 0;
+}
+
+section:first-of-type {
+  scroll-margin-top: 100px;
+}
+
 .font-serif {
   font-family: 'Newsreader', serif;
 }
