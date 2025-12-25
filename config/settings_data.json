@@ -1,9 +1,123 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_primary": "#171717",
     "color_text": "#737373",
     "font_body": "inter_n4",
-    "font_heading": "newsreader_n4"
+    "font_heading": "newsreader_n4",
+    "sections": {
+      "age-gate": {
+        "type": "age-gate",
+        "settings": {}
+      },
+      "navigation": {
+        "type": "navigation",
+        "settings": {}
+      },
+      "hero": {
+        "type": "hero",
+        "settings": {
+          "hero_title": "en un mundo que grita,",
+          "hero_subtitle": "una botella que susurra.",
+          "hero_description": "cada edición es un gesto en blanco. cada gesto, una invitación a mirar por dentro.",
+          "cta_text": "descubrir valentón"
+        }
+      },
+      "product": {
+        "type": "product",
+        "blocks": {
+          "pack_dx4VdC": {
+            "type": "pack",
+            "settings": {
+              "pack_name": "reescribir la historia",
+              "pack_quantity": "6 botellas"
+            }
+          },
+          "pack_zDMXeR": {
+            "type": "pack",
+            "settings": {
+              "pack_name": "para amor propio",
+              "pack_quantity": "1 botella"
+            }
+          },
+          "pack_AKRmfq": {
+            "type": "pack",
+            "settings": {
+              "pack_name": "impacto doble",
+              "pack_quantity": "3 botellas"
+            }
+          }
+        },
+        "block_order": [
+          "pack_dx4VdC",
+          "pack_zDMXeR",
+          "pack_AKRmfq"
+        ],
+        "settings": {
+          "bottle_image": "shopify://shop_images/A_conceptual_editorial_202512252301_2d25fbe9-db87-48dc-b670-4647e412ca3c.png",
+          "bottle_alt": "Botella Albino Valentón",
+          "edition_number": "edición 001",
+          "edition_badge": "lanzamiento",
+          "product_name": "valentón",
+          "product_description": "vino blanco por fuera, tinto por dentro. una botella contra el amor romántico.",
+          "discover_text": "descubrir más",
+          "buy_button_text": "comprar",
+          "donation_text": "*el 5% de los beneficios se dona a la Asociación Alba."
+        }
+      },
+      "manifesto-quote": {
+        "type": "manifesto-quote",
+        "settings": {
+          "quote_text": "no bebemos para olvidar. bebemos para recordar lo que debemos cambiar."
+        }
+      },
+      "impact": {
+        "type": "impact",
+        "settings": {
+          "impact_title": "impacto radical",
+          "impact_description": "Albino no busca lucro, busca eco. El 5% de los beneficios va para la Asociación Alba.",
+          "transparency_link": "",
+          "transparency_text": "ver reporte de transparencia"
+        }
+      },
+      "manifesto-cards": {
+        "type": "manifesto-cards",
+        "settings": {
+          "section_label": "manifiesto valentón",
+          "section_title": "amor propio radical"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "footer_text": "© albino wines — bebiendo por un mundo mejor"
+        }
+      },
+      "product-modal": {
+        "type": "product-modal",
+        "settings": {
+          "modal_product_name": "valentón",
+          "modal_edition": "edición 001 — manifiesto",
+          "concept_title": "El Concepto",
+          "concept_text": "Valentón no es un vino para corazones rotos, sino para los que se han reconstruido. Esta edición cuestiona el mito del amor romántico: es un homenaje al amor que no duele, al vínculo sin posesión y al desapego con ternura.",
+          "wine_title": "El Vino",
+          "wine_type": "Tinto Dulce Natural",
+          "wine_note": "Fruta roja madura, goloso en boca, final fresco.",
+          "wine_design": "Botella blanca opaca. Etiqueta faja minimalista.",
+          "wine_quote": "Blanco absoluto por fuera. Tinto dulce por dentro. Como quien se atreve a reaprender el amor.",
+          "technical_sheet_link": "",
+          "technical_sheet_text": "Ver Ficha Técnica"
+        }
+      }
+    },
+    "content_for_index": []
   }
 }
-
