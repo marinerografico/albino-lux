@@ -180,6 +180,25 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
+// Cookie helper functions
+function setCookie(name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+}
+
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
 // Age Gate Logic
 function enterSite() {
   const gate = document.getElementById('age-gate');
@@ -188,7 +207,8 @@ function enterSite() {
   
   if (!gate || !body) return;
   
-  // Save verification in localStorage
+  // Save verification in cookie (expires in 1 year) and localStorage as backup
+  setCookie('ageVerified', 'true', 365);
   localStorage.setItem('ageVerified', 'true');
   
   // Add fade out class to gate
@@ -213,12 +233,18 @@ function enterSite() {
 
 // Check if age is already verified on page load
 document.addEventListener('DOMContentLoaded', () => {
-  const ageVerified = localStorage.getItem('ageVerified');
+  // Check both cookie and localStorage for compatibility
+  const ageVerified = getCookie('ageVerified') || localStorage.getItem('ageVerified');
   const gate = document.getElementById('age-gate');
   const siteContent = document.getElementById('site-content');
   const body = document.getElementById('main-body');
   
   if (ageVerified === 'true') {
+    // Sync cookie if only localStorage exists
+    if (!getCookie('ageVerified') && localStorage.getItem('ageVerified')) {
+      setCookie('ageVerified', 'true', 365);
+    }
+    
     // Hide gate immediately
     if (gate) {
       gate.classList.add('hidden-gate');
