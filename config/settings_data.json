@@ -34,13 +34,6 @@
       "product": {
         "type": "product",
         "blocks": {
-          "pack_dx4VdC": {
-            "type": "pack",
-            "settings": {
-              "pack_name": "reescribir la historia",
-              "pack_quantity": "6 botellas"
-            }
-          },
           "pack_zDMXeR": {
             "type": "pack",
             "settings": {
@@ -54,12 +47,19 @@
               "pack_name": "impacto doble",
               "pack_quantity": "3 botellas"
             }
+          },
+          "pack_dx4VdC": {
+            "type": "pack",
+            "settings": {
+              "pack_name": "reescribir la historia",
+              "pack_quantity": "6 botellas"
+            }
           }
         },
         "block_order": [
-          "pack_dx4VdC",
           "pack_zDMXeR",
-          "pack_AKRmfq"
+          "pack_AKRmfq",
+          "pack_dx4VdC"
         ],
         "settings": {
           "bottle_image": "shopify://shop_images/A_conceptual_editorial_202512252301_2d25fbe9-db87-48dc-b670-4647e412ca3c.png",
