@@ -135,12 +135,15 @@
 
         <!-- Checkout Button -->
         <div class="pt-6">
-          <a href="/checkout" 
-             class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full text-center">
-            <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
-              seguir con el ritual
-            </span>
-          </a>
+          <form action="{{ routes.cart_url }}" method="post" novalidate id="cart-checkout-form">
+            <button type="submit" 
+                    name="checkout" 
+                    class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full text-center">
+              <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
+                seguir con el ritual
+              </span>
+            </button>
+          </form>
         </div>
 
         <p class="text-[10px] text-neutral-400 tracking-wide text-center pt-4">
@@ -226,6 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide icons if needed
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
+  }
+  
+  // Handle checkout form submission
+  const checkoutForm = document.getElementById('cart-checkout-form');
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', function(e) {
+      // Let Shopify handle the checkout redirect
+      // The form will submit to /cart with checkout parameter
+      // Shopify will redirect to checkout automatically
+    });
+  }
+  
+  // Update cart count
+  if (typeof updateCartCount === 'function') {
+    updateCartCount();
   }
 });
 </script>
