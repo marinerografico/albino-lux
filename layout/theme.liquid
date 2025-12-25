@@ -27,7 +27,7 @@
 
   {{ content_for_header }}
 </head>
-<body class="bg-white text-neutral-500 antialiased selection:bg-neutral-900 selection:text-white overflow-hidden relative" id="main-body">
+<body class="bg-white text-neutral-500 antialiased selection:bg-neutral-900 selection:text-white {% unless template.name == 'cart' %}overflow-hidden relative{% endunless %}" id="main-body">
   
   {% section 'age-gate' %}
   {% section 'navigation' %}

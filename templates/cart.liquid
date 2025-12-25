@@ -1,0 +1,238 @@
+{% comment %}
+  Cart page template
+{% endcomment %}
+
+<div class="min-h-screen bg-white pt-32 pb-32">
+  <div class="max-w-4xl mx-auto px-6">
+    {% if cart.item_count > 0 %}
+      <!-- Header -->
+      <div class="text-center mb-16 space-y-4">
+        <h1 class="text-4xl md:text-5xl font-medium tracking-tight text-neutral-900 lowercase">
+          tu ritual
+        </h1>
+        <p class="text-sm text-neutral-400 font-light tracking-wide">
+          {{ cart.item_count }} {% if cart.item_count == 1 %}botella{% else %}botellas{% endif %}
+        </p>
+      </div>
+
+      <!-- Cart Items -->
+      <form action="/cart" method="post" novalidate class="space-y-8 mb-12">
+        <div class="space-y-6">
+          {% for item in cart.items %}
+            <div class="flex items-start gap-6 pb-8 border-b border-neutral-100 cart-item" data-key="{{ item.key }}">
+              <!-- Product Image -->
+              <div class="flex-shrink-0">
+                <a href="{{ item.url }}">
+                  <img src="{{ item.image | image_url: width: 120 }}" 
+                       alt="{{ item.title | escape }}" 
+                       class="w-20 h-24 object-cover grayscale brightness-110 contrast-125">
+                </a>
+              </div>
+
+              <!-- Product Info -->
+              <div class="flex-1 min-w-0 space-y-3">
+                <div>
+                  <a href="{{ item.url }}" class="font-serif italic text-xl text-neutral-900 lowercase hover:text-neutral-600 transition-colors">
+                    {{ item.product.title }}
+                  </a>
+                  {% if item.variant.title != 'Default Title' %}
+                    <p class="text-xs text-neutral-400 mt-1">{{ item.variant.title }}</p>
+                  {% endif %}
+                </div>
+
+                <!-- Quantity Controls -->
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center border border-neutral-200 rounded-full">
+                    <button type="button" 
+                            class="quantity-decrease px-4 py-2 text-neutral-400 hover:text-neutral-900 transition-colors"
+                            data-key="{{ item.key }}"
+                            onclick="updateQuantity('{{ item.key }}', {{ item.quantity | minus: 1 }})">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                      </svg>
+                    </button>
+                    <input type="number" 
+                           name="updates[]" 
+                           value="{{ item.quantity }}" 
+                           min="1" 
+                           class="quantity-input w-12 text-center text-sm font-medium text-neutral-900 border-0 focus:outline-none focus:ring-0"
+                           data-key="{{ item.key }}"
+                           onchange="updateQuantity('{{ item.key }}', this.value)">
+                    <button type="button" 
+                            class="quantity-increase px-4 py-2 text-neutral-400 hover:text-neutral-900 transition-colors"
+                            data-key="{{ item.key }}"
+                            onclick="updateQuantity('{{ item.key }}', {{ item.quantity | plus: 1 }})">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5v14"></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <button type="button" 
+                          class="remove-item text-xs text-neutral-400 hover:text-neutral-900 transition-colors border-b border-transparent hover:border-neutral-900 pb-0.5"
+                          data-key="{{ item.key }}"
+                          onclick="removeItem('{{ item.key }}')">
+                    eliminar
+                  </button>
+                </div>
+
+                <!-- Price -->
+                <div class="text-sm">
+                  <span class="text-neutral-900 font-medium">{{ item.line_price | money }}</span>
+                  {% if item.original_line_price != item.line_price %}
+                    <span class="text-neutral-300 line-through ml-2">{{ item.original_line_price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Update Button -->
+        <div class="pt-6">
+          <button type="submit" name="update" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors border-b border-transparent hover:border-neutral-900 pb-0.5">
+            actualizar ritual
+          </button>
+        </div>
+      </form>
+
+      <!-- Cart Summary -->
+      <div class="border-t border-neutral-100 pt-12 space-y-8">
+        <div class="space-y-4">
+          {% if cart.cart_level_discount_applications.size > 0 %}
+            <div class="flex justify-between text-sm">
+              <span class="text-neutral-500">descuentos</span>
+              <span class="text-neutral-900 font-medium">
+                {% for discount in cart.cart_level_discount_applications %}
+                  -{{ discount.total_allocated_amount | money }}
+                {% endfor %}
+              </span>
+            </div>
+          {% endif %}
+
+          <div class="flex justify-between text-sm">
+            <span class="text-neutral-500">subtotal</span>
+            <span class="text-neutral-900 font-medium">{{ cart.total_price | money }}</span>
+          </div>
+
+          {% if cart.total_discount > 0 %}
+            <div class="flex justify-between text-sm">
+              <span class="text-neutral-500">descuento</span>
+              <span class="text-neutral-900 font-medium">-{{ cart.total_discount | money }}</span>
+            </div>
+          {% endif %}
+
+          <div class="pt-4 border-t border-neutral-100">
+            <div class="flex justify-between">
+              <span class="text-lg font-serif italic text-neutral-900 lowercase">total</span>
+              <span class="text-lg font-medium text-neutral-900">{{ cart.total_price | money }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkout Button -->
+        <div class="pt-6">
+          <button type="submit" 
+                  form="cart-form" 
+                  name="checkout" 
+                  class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full">
+            <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
+              seguir con el ritual
+            </span>
+          </button>
+        </div>
+
+        <p class="text-[10px] text-neutral-400 tracking-wide text-center pt-4">
+          *el 5% de los beneficios se dona a la Asociación Alba.
+        </p>
+      </div>
+
+      <!-- Hidden form for checkout -->
+      <form action="/cart" method="post" novalidate id="cart-form"></form>
+
+    {% else %}
+      <!-- Empty Cart -->
+      <div class="text-center py-32 space-y-8">
+        <h1 class="text-4xl md:text-5xl font-medium tracking-tight text-neutral-900 lowercase">
+          tu ritual está vacío
+        </h1>
+        <p class="text-lg font-serif italic text-neutral-500 max-w-md mx-auto leading-relaxed">
+          aún no has elegido tu dosis.
+        </p>
+        <div class="pt-8">
+          <a href="{{ routes.all_products_collection_url }}" class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md">
+            <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
+              descubrir valentón
+            </span>
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+// Cart update functions
+function updateQuantity(key, quantity) {
+  if (quantity < 1) {
+    removeItem(key);
+    return;
+  }
+
+  fetch('/cart/change.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: key,
+      quantity: parseInt(quantity)
+    })
+  })
+  .then(response => response.json())
+  .then(cart => {
+    // Reload page to show updated cart
+    window.location.reload();
+  })
+  .catch(error => {
+    console.error('Error updating cart:', error);
+  });
+}
+
+function removeItem(key) {
+  fetch('/cart/change.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: key,
+      quantity: 0
+    })
+  })
+  .then(response => response.json())
+  .then(cart => {
+    // Reload page to show updated cart
+    window.location.reload();
+  })
+  .catch(error => {
+    console.error('Error removing item:', error);
+  });
+}
+
+// Handle form submission
+document.addEventListener('DOMContentLoaded', () => {
+  const cartForm = document.getElementById('cart-form');
+  if (cartForm) {
+    const checkoutButton = document.querySelector('button[name="checkout"]');
+    if (checkoutButton) {
+      checkoutButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = '/checkout';
+      });
+    }
+  }
+});
+</script>
+
