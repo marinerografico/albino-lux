@@ -41,6 +41,23 @@ landing/
 
 ## 🚀 Instalación
 
+### Prerrequisitos
+
+1. Instala las dependencias:
+```bash
+npm install
+```
+
+2. Compila el CSS de Tailwind (necesario antes de subir a producción):
+```bash
+npm run build:css
+```
+
+O para desarrollo con watch mode:
+```bash
+npm run watch:css
+```
+
 ### Opción 1: Usando Shopify CLI
 
 1. Instala [Shopify CLI](https://shopify.dev/themes/tools/cli):
@@ -58,12 +75,19 @@ shopify theme login
 shopify theme push
 ```
 
+**Importante**: Asegúrate de haber ejecutado `npm run build:css` antes de subir el tema para que el CSS compilado esté incluido.
+
 ### Opción 2: Subida Manual
 
-1. Comprime toda la carpeta del tema en un archivo ZIP
-2. Ve a tu admin de Shopify: **Online Store > Themes**
-3. Haz clic en **Upload theme**
-4. Selecciona el archivo ZIP
+1. Asegúrate de haber compilado el CSS:
+```bash
+npm run build:css
+```
+
+2. Comprime toda la carpeta del tema en un archivo ZIP
+3. Ve a tu admin de Shopify: **Online Store > Themes**
+4. Haz clic en **Upload theme**
+5. Selecciona el archivo ZIP
 
 ## 🛠️ Configuración
 
@@ -128,9 +152,39 @@ Footer minimalista con enlaces y texto de copyright.
 ## 🔧 Tecnologías Utilizadas
 
 - **Shopify Liquid**: Sistema de plantillas de Shopify
-- **Tailwind CSS**: Framework CSS utility-first (CDN)
+- **Tailwind CSS**: Framework CSS utility-first (compilado con PostCSS)
+- **PostCSS**: Procesador de CSS
 - **Lucide Icons**: Iconos SVG modernos
 - **Google Fonts**: Inter y Newsreader
+
+## 📦 Build y Desarrollo
+
+### Compilar CSS
+
+El tema usa Tailwind CSS compilado para producción. Para compilar:
+
+```bash
+npm run build:css
+```
+
+Esto genera `assets/tailwind.css` que es el archivo usado en producción.
+
+### Watch Mode (Desarrollo)
+
+Para desarrollo con recarga automática:
+
+```bash
+npm run watch:css
+```
+
+### Scripts Disponibles
+
+- `npm run build:css` - Compila Tailwind CSS para producción
+- `npm run watch:css` - Compila y observa cambios en modo desarrollo
+- `npm run dev` - Inicia Shopify CLI en modo desarrollo
+- `npm run push` - Sube el tema a Shopify
+- `npm run pull` - Descarga el tema desde Shopify
+- `npm run check` - Verifica el código con Shopify Theme Check
 
 ## 📦 Dependencias Externas
 

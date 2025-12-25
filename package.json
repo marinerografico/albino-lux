@@ -6,7 +6,9 @@
     "dev": "shopify theme dev",
     "push": "shopify theme push",
     "pull": "shopify theme pull",
-    "check": "shopify theme check"
+    "check": "shopify theme check",
+    "build:css": "tailwindcss -i ./assets/main.css -o ./assets/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./assets/main.css -o ./assets/tailwind.css --watch"
   },
   "keywords": [
     "shopify",
@@ -17,7 +19,10 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@shopify/cli": "^3.0.0",
-    "@shopify/theme": "^3.0.0"
+    "@shopify/theme": "^3.0.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0"
   }
 }
 

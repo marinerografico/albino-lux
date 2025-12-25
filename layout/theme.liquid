@@ -9,13 +9,20 @@
     <meta name="description" content="{{ page_description | escape }}">
   {% endif %}
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Favicon -->
+  {% if shop.favicon %}
+    <link rel="icon" type="image/png" href="{{ shop.favicon | image_url: width: 32 }}">
+  {% else %}
+    <link rel="icon" type="image/x-icon" href="{{ 'favicon.ico' | asset_url }}">
+  {% endif %}
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <!-- Main Stylesheet -->
+  <!-- Compiled Tailwind CSS -->
+  {{ 'tailwind.css' | asset_url | stylesheet_tag }}
+  
+  <!-- Main Stylesheet (Custom styles) -->
   {{ 'main.css' | asset_url | stylesheet_tag }}
 
   {{ content_for_header }}
