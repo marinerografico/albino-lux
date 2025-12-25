@@ -73,25 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
         quantityInput.value = selectedQuantity;
       }
       
-      // Prevent default and use AJAX for better UX
-      e.preventDefault();
-      
-      const formData = new FormData(buyForm);
-      
-      fetch('/cart/add.js', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        // Success - redirect to cart or show success message
-        window.location.href = '/cart';
-      })
-      .catch(error => {
-        console.error('Error adding to cart:', error);
-        // Fallback to regular form submission
-        buyForm.submit();
-      });
+      // Use traditional form submission - Shopify handles redirect automatically
+      // This avoids 404 errors if cart page doesn't exist
+      // The form will submit normally and Shopify will handle the response
     });
   }
   

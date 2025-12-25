@@ -67,6 +67,7 @@
           <form action="/cart/add" method="post" enctype="multipart/form-data" class="w-full md:w-auto" id="product-form-{{ section.id }}">
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="product-variant-id">
             <input type="hidden" name="quantity" value="1" id="product-quantity">
+            <input type="hidden" name="return_to" value="/checkout">
             <button type="submit" class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto buy-button">
               <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
                 {{ section.settings.buy_button_text | default: "comprar" }}
