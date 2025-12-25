@@ -1,0 +1,39 @@
+<div id="age-gate" class="fixed inset-0 z-[100000] bg-white flex flex-col items-center justify-center p-6 text-center">
+  <div class="max-w-md w-full space-y-10 animate-fade-in-slow">
+    <!-- Logo Small -->
+    <div class="mb-12">
+      <span class="lowercase leading-none text-xl font-bold text-neutral-900 tracking-tighter">
+        albino.
+      </span>
+    </div>
+
+    <div class="space-y-6">
+      <h2 class="font-serif italic text-3xl md:text-4xl text-neutral-900 leading-tight">
+        lo que hay dentro no es para todos.
+      </h2>
+      <p class="text-sm text-neutral-500 font-light tracking-wide">
+        ¿tienes la edad suficiente para descubrirlo?
+      </p>
+    </div>
+
+    <div class="flex flex-col items-center gap-y-4 pt-4">
+      <button onclick="enterSite()" class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm w-full md:w-auto">
+        <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
+          sí, tengo 18 años
+        </span>
+      </button>
+      
+      <a href="https://google.com" class="text-xs text-neutral-400 hover:text-neutral-900 transition-colors border-b border-transparent hover:border-neutral-900 pb-0.5">
+        mejor no por ahora
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Age Gate",
+  "settings": []
+}
+{% endschema %}
+

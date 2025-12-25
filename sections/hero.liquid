@@ -1,0 +1,60 @@
+<section class="flex flex-col pr-6 pl-6 relative items-center justify-center min-h-[80vh]">
+  <div class="text-center space-y-10 z-10 max-w-4xl">
+    <h1 class="text-4xl md:text-6xl tracking-tight text-neutral-900 font-normal leading-tight lowercase opacity-0" style="animation: fadeIn 1.5s ease-out forwards 0.2s">
+      {{ section.settings.hero_title | default: "en un mundo que grita," }}
+      <br>
+      <span class="text-neutral-400">{{ section.settings.hero_subtitle | default: "una botella que susurra." }}</span>
+    </h1>
+    <p class="text-lg md:text-xl font-light tracking-wide text-neutral-500 max-w-lg mx-auto leading-relaxed opacity-0" style="animation: fadeIn 1.5s ease-out forwards 0.8s">
+      {{ section.settings.hero_description | default: "cada edición es un gesto en blanco. cada gesto, una invitación a mirar por dentro." }}
+    </p>
+    <div class="pt-8 opacity-0" style="animation: fadeIn 1.5s ease-out forwards 1.4s">
+      <button onclick="document.getElementById('product-section').scrollIntoView({behavior: 'smooth'})" class="group relative px-9 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-lg">
+        <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
+          {{ section.settings.cta_text | default: "descubrir valentón" }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-12 animate-pulse opacity-30 text-neutral-900">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-down" class="lucide lucide-arrow-down w-5 h-5 stroke-[1.5]">
+      <path d="M12 5v14"></path>
+      <path d="m19 12-7 7-7-7"></path>
+    </svg>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "en un mundo que grita,"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "una botella que susurra."
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description",
+      "label": "Hero Description",
+      "default": "cada edición es un gesto en blanco. cada gesto, una invitación a mirar por dentro."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "descubrir valentón"
+    }
+  ]
+}
+{% endschema %}
+

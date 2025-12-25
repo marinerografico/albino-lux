@@ -1,0 +1,114 @@
+<section class="w-full max-w-5xl pt-24 pr-6 pb-24 pl-6 space-y-16">
+  <div class="text-center reveal-text">
+    <span class="text-xs tracking-widest uppercase text-neutral-400 font-medium">
+      {{ section.settings.section_label | default: "manifiesto valentón" }}
+    </span>
+    <h2 class="text-3xl md:text-4xl font-semibold tracking-tighter text-neutral-900 mt-4 lowercase">
+      {{ section.settings.section_title | default: "amor propio radical" }}
+    </h2>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+    {% for block in section.blocks %}
+      {% if block.type == 'manifesto_card' %}
+        <div class="group p-8 border border-neutral-100 hover:border-neutral-900 transition-colors duration-500 rounded-lg reveal-text {% if forloop.index > 1 %}delay-{{ forloop.index | times: 100 }}{% endif %}">
+          {% if block.settings.icon_name != blank %}
+            {% render 'icon', icon_name: block.settings.icon_name %}
+          {% endif %}
+          <p class="text-xl font-serif italic text-neutral-800 leading-relaxed">
+            "{{ block.settings.card_quote }}"
+          </p>
+          <div class="mt-6 flex items-center space-x-2 text-xs font-medium uppercase tracking-wider text-neutral-400">
+            <span>— {{ block.settings.card_category }}</span>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Manifesto Cards",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_label",
+      "label": "Section Label",
+      "default": "manifiesto valentón"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "amor propio radical"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "manifesto_card",
+      "name": "Manifesto Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon_name",
+          "label": "Icon Name (lucide)",
+          "default": "sparkles"
+        },
+        {
+          "type": "textarea",
+          "id": "card_quote",
+          "label": "Card Quote",
+          "default": "No busques a tu media naranja. Eres una fruta completa, no una mitad a la espera."
+        },
+        {
+          "type": "text",
+          "id": "card_category",
+          "label": "Card Category",
+          "default": "sobre plenitud"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Manifesto Cards",
+      "blocks": [
+        {
+          "type": "manifesto_card",
+          "settings": {
+            "icon_name": "sparkles",
+            "card_quote": "No busques a tu media naranja. Eres una fruta completa, no una mitad a la espera.",
+            "card_category": "sobre plenitud"
+          }
+        },
+        {
+          "type": "manifesto_card",
+          "settings": {
+            "icon_name": "heart",
+            "card_quote": "Enamorarse de uno mismo es el primer secreto de la felicidad. Lo demás es compañía.",
+            "card_category": "sobre el origen"
+          }
+        },
+        {
+          "type": "manifesto_card",
+          "settings": {
+            "icon_name": "shield",
+            "card_quote": "Tus límites son la distancia a la que puedes amarte a ti mismo y a los demás al mismo tiempo.",
+            "card_category": "sobre respeto"
+          }
+        },
+        {
+          "type": "manifesto_card",
+          "settings": {
+            "icon_name": "sun",
+            "card_quote": "No necesitas que nadie te complete, solo que te acepten completo.",
+            "card_category": "sobre suficiencia"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

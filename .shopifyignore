@@ -1,0 +1,10 @@
+# Files to ignore when uploading to Shopify
+.git/
+.gitignore
+README.md
+.shopifyignore
+node_modules/
+.env
+*.md
+.DS_Store
+

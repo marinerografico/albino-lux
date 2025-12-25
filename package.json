@@ -1,0 +1,23 @@
+{
+  "name": "albino-wine-shopify-theme",
+  "version": "1.0.0",
+  "description": "Shopify theme for Albino Wine landing page",
+  "scripts": {
+    "dev": "shopify theme dev",
+    "push": "shopify theme push",
+    "pull": "shopify theme pull",
+    "check": "shopify theme check"
+  },
+  "keywords": [
+    "shopify",
+    "theme",
+    "liquid"
+  ],
+  "author": "Albino Wines",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@shopify/cli": "^3.0.0",
+    "@shopify/theme": "^3.0.0"
+  }
+}
+
