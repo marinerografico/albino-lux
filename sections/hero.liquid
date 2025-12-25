@@ -1,5 +1,5 @@
-<section class="flex flex-col pr-6 pl-6 relative items-center justify-center min-h-screen pt-40 md:pt-48 pb-24">
-  <div class="text-center space-y-16 z-10 max-w-4xl mt-12 md:mt-0">
+<section class="flex flex-col pr-6 pl-6 relative items-center justify-center min-h-screen pt-40 md:pt-48 pb-32">
+  <div class="text-center space-y-16 z-10 max-w-4xl mt-12 md:mt-0 relative">
     <h1 class="text-4xl md:text-6xl tracking-tight text-neutral-900 font-normal leading-tight lowercase opacity-0" style="animation: fadeIn 1.5s ease-out forwards 0.2s">
       {{ section.settings.hero_title | default: "en un mundo que grita," }}
       <br>
@@ -18,7 +18,7 @@
   </div>
 
   <!-- Scroll Indicator -->
-  <div class="absolute bottom-16 animate-pulse opacity-30 text-neutral-900">
+  <div class="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 animate-pulse opacity-15 text-neutral-400 pointer-events-none">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-down" class="lucide lucide-arrow-down w-5 h-5 stroke-[1.5]">
       <path d="M12 5v14"></path>
       <path d="m19 12-7 7-7-7"></path>
