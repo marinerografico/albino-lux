@@ -103,28 +103,43 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         body: formData
       })
-      .then(response => response.json())
-      .then(data => {
-        // Check if quantity was adjusted (Shopify returns this in the response)
-        if (data && data.message && data.message.includes('quantity')) {
-          // Quantity was adjusted - show modal
-          const productName = buyForm.closest('section')?.querySelector('h2')?.textContent || 'valentón';
-          const packName = document.querySelector('.pack-option.active')?.querySelector('span')?.textContent || 'para amor propio';
-          
-          // Get product image
-          const productImage = document.querySelector('.bottle-container')?.src || '';
-          
-          showCartUpdateModal({
-            name: productName.trim(),
-            image: productImage,
-            pack: packName.trim(),
-            oldQuantity: selectedQuantity + ' botella' + (selectedQuantity > 1 ? 's' : ''),
-            newQuantity: (data.quantity || 1) + ' botella' + ((data.quantity || 1) > 1 ? 's' : '')
-          });
-        } else {
-          // Success - redirect to checkout
-          window.location.href = '/checkout';
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
+        return response.json();
+      })
+      .then(data => {
+        // Check if we need to verify quantity (Shopify might adjust it)
+        // First, get the current cart to check if quantity was adjusted
+        return fetch('/cart.js')
+          .then(cartResponse => cartResponse.json())
+          .then(cart => {
+            // Find the item we just added
+            const addedItem = cart.items.find(item => item.variant_id == variantId);
+            
+            if (addedItem && addedItem.quantity < selectedQuantity) {
+              // Quantity was adjusted - show modal
+              const productName = buyForm.closest('section')?.querySelector('h2')?.textContent || 'valentón';
+              const packOption = document.querySelector('.pack-option.active');
+              const packName = packOption?.querySelector('.font-serif')?.textContent?.trim() || 'para amor propio';
+              
+              // Get product image
+              const productImage = document.querySelector('.bottle-container')?.src || 
+                                   document.querySelector('img[alt*="Botella"]')?.src || '';
+              
+              showCartUpdateModal({
+                name: productName.trim(),
+                image: productImage,
+                pack: packName,
+                oldQuantity: selectedQuantity + ' botella' + (selectedQuantity > 1 ? 's' : ''),
+                newQuantity: addedItem.quantity + ' botella' + (addedItem.quantity > 1 ? 's' : '')
+              });
+            } else {
+              // Success - redirect to checkout
+              window.location.href = '/checkout';
+            }
+          });
       })
       .catch(error => {
         console.error('Error adding to cart:', error);
