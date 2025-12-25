@@ -136,8 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 newQuantity: addedItem.quantity + ' botella' + (addedItem.quantity > 1 ? 's' : '')
               });
             } else {
-              // Success - redirect to checkout
-              window.location.href = '/checkout';
+              // Success - redirect to cart so user can review and add more
+              window.location.href = '/cart';
             }
           });
       })

@@ -133,14 +133,12 @@
 
         <!-- Checkout Button -->
         <div class="pt-6">
-          <button type="submit" 
-                  form="cart-form" 
-                  name="checkout" 
-                  class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full">
+          <a href="/checkout" 
+             class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full text-center">
             <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
               seguir con el ritual
             </span>
-          </button>
+          </a>
         </div>
 
         <p class="text-[10px] text-neutral-400 tracking-wide text-center pt-4">
@@ -221,17 +219,11 @@ function removeItem(key) {
   });
 }
 
-// Handle form submission
+// Cart is ready
 document.addEventListener('DOMContentLoaded', () => {
-  const cartForm = document.getElementById('cart-form');
-  if (cartForm) {
-    const checkoutButton = document.querySelector('button[name="checkout"]');
-    if (checkoutButton) {
-      checkoutButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = '/checkout';
-      });
-    }
+  // Initialize Lucide icons if needed
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
   }
 });
 </script>
