@@ -195,6 +195,12 @@ El tema utiliza CDN para las siguientes librerías:
 
 ## 🐛 Solución de Problemas
 
+### El carrito no se muestra correctamente
+1. Asegúrate de que el archivo `templates/cart.liquid` esté subido a Shopify
+2. El template se activa automáticamente cuando accedes a `/cart`
+3. Si no funciona, verifica en el admin de Shopify: **Online Store > Themes > Customize > Theme settings > Cart**
+4. Asegúrate de que el tema esté publicado y activo
+
 ### El Age Gate no desaparece
 Asegúrate de que el JavaScript esté cargando correctamente. Verifica la consola del navegador para errores.
 
