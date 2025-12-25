@@ -2,7 +2,13 @@
   <!-- Bottle Image Presentation -->
   <div class="md:w-1/2 md:h-screen flex overflow-hidden w-full h-[60vh] relative items-center justify-center">
     <div class="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white z-10 pointer-events-none"></div>
-    <img src="{{ section.settings.bottle_image | default: 'https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ab1a9549-cfbe-4ca5-84ff-b09a28ae69d7_800w.png' }}" alt="{{ section.settings.bottle_alt | default: 'Botella Albino Valentón' }}" class="md:h-[80%] contrast-125 bottle-container reveal-text duration-1000 w-auto h-[85%] object-cover grayscale brightness-110 blur-focus">
+    {% if section.settings.bottle_image %}
+      <img src="{{ section.settings.bottle_image | image_url: width: 800 }}" alt="{{ section.settings.bottle_alt | default: 'Botella Albino Valentón' }}" class="md:h-[80%] contrast-125 bottle-container reveal-text duration-1000 w-auto h-[85%] object-cover grayscale brightness-110 blur-focus" onerror="this.src='https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ab1a9549-cfbe-4ca5-84ff-b09a28ae69d7_800w.png'">
+    {% elsif section.settings.product != blank and section.settings.product.featured_image %}
+      <img src="{{ section.settings.product.featured_image | image_url: width: 800 }}" alt="{{ section.settings.product.title | escape }}" class="md:h-[80%] contrast-125 bottle-container reveal-text duration-1000 w-auto h-[85%] object-cover grayscale brightness-110 blur-focus">
+    {% else %}
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/ab1a9549-cfbe-4ca5-84ff-b09a28ae69d7_800w.png" alt="{{ section.settings.bottle_alt | default: 'Botella Albino Valentón' }}" class="md:h-[80%] contrast-125 bottle-container reveal-text duration-1000 w-auto h-[85%] object-cover grayscale brightness-110 blur-focus">
+    {% endif %}
   </div>
 
   <!-- Product Details -->
@@ -38,7 +44,7 @@
     <div class="space-y-6">
       {% for block in section.blocks %}
         {% if block.type == 'pack' %}
-          <button class="w-full group relative cursor-pointer text-left focus:outline-none" onclick="selectPack(this, 'pack{{ forloop.index }}')">
+          <button type="button" class="w-full group relative cursor-pointer text-left focus:outline-none pack-option" data-quantity="{{ block.settings.pack_quantity }}" onclick="selectPack(this, 'pack{{ forloop.index }}')">
             <div class="flex items-baseline justify-between py-4 border-b border-neutral-200 group-hover:border-neutral-900 transition-colors duration-300">
               <span class="font-serif italic text-lg text-neutral-600 group-hover:text-neutral-900 transition-colors">
                 {{ block.settings.pack_name }}
@@ -55,11 +61,29 @@
 
     <!-- CTA -->
     <div class="flex flex-col md:flex-row md:justify-start pt-12 gap-x-6 gap-y-6 items-center justify-center">
-      <button class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto">
-        <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
-          {{ section.settings.buy_button_text | default: "comprar" }}
-        </span>
-      </button>
+      {% if section.settings.product != blank %}
+        <form action="/cart/add" method="post" enctype="multipart/form-data" class="w-full md:w-auto">
+          <input type="hidden" name="id" value="{{ section.settings.product.selected_or_first_available_variant.id }}" id="product-variant-id">
+          <input type="hidden" name="quantity" value="1" id="product-quantity">
+          <button type="submit" class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto buy-button">
+            <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
+              {{ section.settings.buy_button_text | default: "comprar" }}
+            </span>
+          </button>
+        </form>
+      {% elsif section.settings.product_url != blank %}
+        <a href="{{ section.settings.product_url }}" class="group relative inline-block px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto text-center">
+          <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
+            {{ section.settings.buy_button_text | default: "comprar" }}
+          </span>
+        </a>
+      {% else %}
+        <button class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto" disabled>
+          <span class="uppercase text-xs font-medium tracking-widest z-10 relative opacity-50">
+            {{ section.settings.buy_button_text | default: "comprar" }}
+          </span>
+        </button>
+      {% endif %}
       <span class="text-[10px] text-neutral-400 tracking-wide max-w-[150px] leading-tight text-center md:text-left">
         {{ section.settings.donation_text | default: "*el 5% de los beneficios se dona a la Asociación Alba." }}
       </span>
@@ -72,9 +96,22 @@
   "name": "Product Section",
   "settings": [
     {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product to sell. If not selected, you can use a product URL instead."
+    },
+    {
+      "type": "url",
+      "id": "product_url",
+      "label": "Product URL (Alternative)",
+      "info": "Alternative: Link to product page if product picker is not used"
+    },
+    {
       "type": "image_picker",
       "id": "bottle_image",
-      "label": "Bottle Image"
+      "label": "Bottle Image (Override)",
+      "info": "Optional: Override product image with custom image"
     },
     {
       "type": "text",
@@ -140,7 +177,8 @@
           "type": "text",
           "id": "pack_quantity",
           "label": "Pack Quantity",
-          "default": "1 botella"
+          "default": "1 botella",
+          "info": "Enter quantity like '1 botella', '3 botellas', etc. The number will be extracted automatically."
         }
       ]
     }

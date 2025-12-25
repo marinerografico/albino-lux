@@ -25,11 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Pack Selection Logic
+let selectedQuantity = 1;
+
 function selectPack(element, packId) {
-  // Reset all indicators
+  // Reset all indicators and remove active state
   document.querySelectorAll('.pack-indicator').forEach(el => {
     el.classList.remove('w-full');
     el.classList.add('w-0');
+  });
+  
+  document.querySelectorAll('.pack-option').forEach(el => {
+    el.classList.remove('active');
   });
 
   // Activate selected indicator
@@ -38,7 +44,43 @@ function selectPack(element, packId) {
     indicator.classList.remove('w-0');
     indicator.classList.add('w-full');
   }
+  
+  // Add active state to selected pack
+  if (element) {
+    element.classList.add('active');
+    
+    // Extract quantity from data attribute
+    const quantityText = element.getAttribute('data-quantity') || '1 botella';
+    const quantityMatch = quantityText.match(/\d+/);
+    selectedQuantity = quantityMatch ? parseInt(quantityMatch[0]) : 1;
+    
+    // Update quantity input
+    const quantityInput = document.getElementById('product-quantity');
+    if (quantityInput) {
+      quantityInput.value = selectedQuantity;
+    }
+  }
 }
+
+// Handle form submission for add to cart
+document.addEventListener('DOMContentLoaded', () => {
+  const buyForm = document.querySelector('form[action="/cart/add"]');
+  if (buyForm) {
+    buyForm.addEventListener('submit', function(e) {
+      // Ensure quantity is set
+      const quantityInput = document.getElementById('product-quantity');
+      if (quantityInput && selectedQuantity) {
+        quantityInput.value = selectedQuantity;
+      }
+    });
+  }
+  
+  // Initialize with first pack selected by default
+  const firstPack = document.querySelector('.pack-option');
+  if (firstPack) {
+    selectPack(firstPack, 'pack1');
+  }
+});
 
 // Age Gate Logic
 function enterSite() {
