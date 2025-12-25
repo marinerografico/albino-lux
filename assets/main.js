@@ -276,6 +276,15 @@ function updateCartCount() {
     });
 }
 
+// Format money helper
+function formatMoney(cents) {
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2
+  }).format(cents / 100);
+}
+
 // Load cart items into modal
 function loadCartModal(cart) {
   const container = document.getElementById('cart-items-container');
@@ -296,36 +305,31 @@ function loadCartModal(cart) {
     if (summary) summary.classList.remove('hidden');
     if (checkoutBtn) checkoutBtn.classList.remove('hidden');
     
-    // Format money
-    const formatMoney = (cents) => {
-      return new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR',
-        minimumFractionDigits: 2
-      }).format(cents / 100);
-    };
-    
     // Render items
     cart.items.forEach(item => {
       const itemDiv = document.createElement('div');
       itemDiv.className = 'flex items-center gap-4 p-4 border border-neutral-100 rounded-2xl bg-neutral-50/50 hover:border-neutral-200 transition-colors';
+      
+      // Get image URL (handle different Shopify image formats)
+      const imageUrl = item.image ? item.image : '';
+      
       itemDiv.innerHTML = `
         <div class="h-16 w-16 shrink-0 bg-white rounded-xl overflow-hidden border border-neutral-100 flex items-center justify-center">
-          <img src="${item.image}" alt="${item.title}" class="h-full w-auto object-cover mix-blend-multiply opacity-90">
+          <img src="${imageUrl}" alt="${item.product_title || item.title}" class="h-full w-auto object-cover mix-blend-multiply opacity-90" onerror="this.style.display='none'">
         </div>
         <div class="flex-1 min-w-0">
-          <h4 class="text-sm font-semibold text-neutral-900 truncate">${item.product_title}</h4>
+          <h4 class="text-sm font-semibold text-neutral-900 truncate lowercase">${(item.product_title || item.title).toLowerCase()}</h4>
           ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="text-xs text-neutral-500 truncate mt-0.5">${item.variant_title}</p>` : ''}
           <div class="flex items-center gap-3 mt-2">
-            <button onclick="updateCartItemQuantity('${item.key}', ${item.quantity - 1})" class="text-neutral-400 hover:text-neutral-900 transition-colors text-xs">−</button>
-            <span class="text-xs text-neutral-600 font-medium">${item.quantity}</span>
-            <button onclick="updateCartItemQuantity('${item.key}', ${item.quantity + 1})" class="text-neutral-400 hover:text-neutral-900 transition-colors text-xs">+</button>
+            <button type="button" onclick="updateCartItemQuantity('${item.key}', ${item.quantity - 1})" class="text-neutral-400 hover:text-neutral-900 transition-colors text-xs w-6 h-6 flex items-center justify-center">−</button>
+            <span class="text-xs text-neutral-600 font-medium min-w-[20px] text-center">${item.quantity}</span>
+            <button type="button" onclick="updateCartItemQuantity('${item.key}', ${item.quantity + 1})" class="text-neutral-400 hover:text-neutral-900 transition-colors text-xs w-6 h-6 flex items-center justify-center">+</button>
           </div>
         </div>
         <div class="text-right">
           <span class="text-xs font-semibold text-neutral-900 block">${formatMoney(item.line_price)}</span>
           <span class="text-[10px] text-neutral-400 font-medium">${item.quantity} ${item.quantity === 1 ? 'ud.' : 'uds.'}</span>
-          <button onclick="removeCartItem('${item.key}')" class="text-[10px] text-neutral-400 hover:text-neutral-900 transition-colors mt-1 block">eliminar</button>
+          <button type="button" onclick="removeCartItem('${item.key}')" class="text-[10px] text-neutral-400 hover:text-neutral-900 transition-colors mt-1 block">eliminar</button>
         </div>
       `;
       container.appendChild(itemDiv);
