@@ -27,19 +27,22 @@
 
   {{ content_for_header }}
 </head>
-<body class="bg-white text-neutral-500 antialiased selection:bg-neutral-900 selection:text-white {% unless template.name == 'cart' %}overflow-hidden relative{% endunless %}" id="main-body">
+<body class="bg-white text-neutral-500 antialiased selection:bg-neutral-900 selection:text-white overflow-hidden relative" id="main-body">
   
   {% section 'age-gate' %}
-  {% section 'navigation' %}
   
-  <main id="main-content">
-    {{ content_for_layout }}
-  </main>
-  
-  {% section 'footer' %}
-  {% section 'product-modal' %}
-  {% section 'cart-update-modal' %}
-  {% section 'cart-modal' %}
+  <div id="site-content" class="hidden">
+    {% section 'navigation' %}
+    
+    <main id="main-content">
+      {{ content_for_layout }}
+    </main>
+    
+    {% section 'footer' %}
+    {% section 'product-modal' %}
+    {% section 'cart-update-modal' %}
+    {% section 'cart-modal' %}
+  </div>
 
   <!-- Main JavaScript -->
   {{ 'main.js' | asset_url | script_tag }}

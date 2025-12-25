@@ -184,18 +184,64 @@ document.addEventListener('DOMContentLoaded', () => {
 function enterSite() {
   const gate = document.getElementById('age-gate');
   const body = document.getElementById('main-body');
+  const siteContent = document.getElementById('site-content');
   
   if (!gate || !body) return;
   
-  // Add fade out class
+  // Save verification in localStorage
+  localStorage.setItem('ageVerified', 'true');
+  
+  // Add fade out class to gate
   gate.classList.add('hidden-gate');
+  
+  // Show site content
+  if (siteContent) {
+    siteContent.classList.remove('hidden');
+  }
   
   // Remove overflow hidden from body to allow scrolling
   setTimeout(() => {
     body.classList.remove('overflow-hidden');
     body.classList.add('overflow-x-hidden');
+    
+    // Remove gate from DOM after animation
+    setTimeout(() => {
+      if (gate) gate.style.display = 'none';
+    }, 800);
   }, 500);
 }
+
+// Check if age is already verified on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const ageVerified = localStorage.getItem('ageVerified');
+  const gate = document.getElementById('age-gate');
+  const siteContent = document.getElementById('site-content');
+  const body = document.getElementById('main-body');
+  
+  if (ageVerified === 'true') {
+    // Hide gate immediately
+    if (gate) {
+      gate.classList.add('hidden-gate');
+      gate.style.display = 'none';
+    }
+    
+    // Show site content
+    if (siteContent) {
+      siteContent.classList.remove('hidden');
+    }
+    
+    // Allow scrolling
+    if (body) {
+      body.classList.remove('overflow-hidden');
+      body.classList.add('overflow-x-hidden');
+    }
+  } else {
+    // Keep gate visible and content hidden
+    if (siteContent) {
+      siteContent.classList.add('hidden');
+    }
+  }
+});
 
 // Cart Update Modal Logic
 function showCartUpdateModal(productData) {
