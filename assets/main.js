@@ -246,6 +246,26 @@ function proceedWithRitual() {
   window.location.href = '/checkout';
 }
 
+// Update cart count in navigation
+function updateCartCount() {
+  fetch('/cart.js')
+    .then(response => response.json())
+    .then(cart => {
+      const cartCount = document.getElementById('cart-item-count');
+      const cartCountSpan = document.querySelector('.cart-count');
+      
+      if (cartCount && cart.item_count > 0) {
+        cartCount.textContent = cart.item_count;
+        if (cartCountSpan) cartCountSpan.classList.remove('hidden');
+      } else {
+        if (cartCountSpan) cartCountSpan.classList.add('hidden');
+      }
+    })
+    .catch(error => {
+      // Silently fail if cart is not available
+    });
+}
+
 // Listen for Shopify cart update events
 document.addEventListener('DOMContentLoaded', () => {
   // Check if we're coming from a cart update
@@ -266,6 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.history.replaceState({}, document.title, window.location.pathname);
   }
   
+  // Update cart count on page load
+  updateCartCount();
+  
   // Listen for Shopify cart API responses
   if (typeof Shopify !== 'undefined' && Shopify.cart) {
     const originalAddItem = Shopify.cart.addItem;
@@ -277,6 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = response.json ? response.json() : response;
             // Handle quantity adjustments if needed
           }
+          // Update cart count after adding item
+          updateCartCount();
           return response;
         });
       };
