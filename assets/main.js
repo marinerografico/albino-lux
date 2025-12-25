@@ -92,9 +92,45 @@ document.addEventListener('DOMContentLoaded', () => {
         quantityInput.value = selectedQuantity;
       }
       
-      // Use traditional form submission - Shopify handles redirect automatically
-      // This avoids 404 errors if cart page doesn't exist
-      // The form will submit normally and Shopify will handle the response
+      // Try AJAX first to catch quantity adjustments
+      e.preventDefault();
+      
+      const formData = new FormData(buyForm);
+      const variantId = formData.get('id');
+      const quantity = formData.get('quantity');
+      
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Check if quantity was adjusted (Shopify returns this in the response)
+        if (data && data.message && data.message.includes('quantity')) {
+          // Quantity was adjusted - show modal
+          const productName = buyForm.closest('section')?.querySelector('h2')?.textContent || 'valentón';
+          const packName = document.querySelector('.pack-option.active')?.querySelector('span')?.textContent || 'para amor propio';
+          
+          // Get product image
+          const productImage = document.querySelector('.bottle-container')?.src || '';
+          
+          showCartUpdateModal({
+            name: productName.trim(),
+            image: productImage,
+            pack: packName.trim(),
+            oldQuantity: selectedQuantity + ' botella' + (selectedQuantity > 1 ? 's' : ''),
+            newQuantity: (data.quantity || 1) + ' botella' + ((data.quantity || 1) > 1 ? 's' : '')
+          });
+        } else {
+          // Success - redirect to checkout
+          window.location.href = '/checkout';
+        }
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        // Fallback to regular form submission
+        buyForm.submit();
+      });
     });
   }
   
@@ -137,4 +173,96 @@ function enterSite() {
     body.classList.add('overflow-x-hidden');
   }, 500);
 }
+
+// Cart Update Modal Logic
+function showCartUpdateModal(productData) {
+  const modal = document.getElementById('cart-update-modal');
+  if (!modal) return;
+  
+  // Set product data
+  if (productData) {
+    const imageEl = document.getElementById('cart-update-product-image');
+    const nameEl = document.getElementById('cart-update-product-name');
+    const packEl = document.getElementById('cart-update-pack-name');
+    const oldQtyEl = document.getElementById('cart-update-old-quantity');
+    const newQtyEl = document.getElementById('cart-update-new-quantity');
+    
+    if (imageEl && productData.image) {
+      imageEl.src = productData.image;
+      imageEl.alt = productData.name || '';
+    }
+    if (nameEl) nameEl.textContent = productData.name || '';
+    if (packEl) packEl.textContent = productData.pack || '';
+    if (oldQtyEl) oldQtyEl.textContent = productData.oldQuantity || '';
+    if (newQtyEl) newQtyEl.textContent = productData.newQuantity || '';
+  }
+  
+  // Show modal with animation
+  modal.classList.remove('hidden');
+  const content = modal.querySelector('.cart-update-content');
+  if (content) {
+    content.classList.remove('fade-out');
+  }
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCartUpdateModal() {
+  const modal = document.getElementById('cart-update-modal');
+  if (!modal) return;
+  
+  const content = modal.querySelector('.cart-update-content');
+  if (content) {
+    content.classList.add('fade-out');
+  }
+  
+  setTimeout(() => {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }, 300);
+}
+
+function proceedWithRitual() {
+  // Redirect to checkout
+  window.location.href = '/checkout';
+}
+
+// Listen for Shopify cart update events
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if we're coming from a cart update
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('cart_updated') === 'true') {
+    // Get product data from URL params or localStorage
+    const productData = {
+      name: urlParams.get('product_name') || 'valentón',
+      image: urlParams.get('product_image') || '',
+      pack: urlParams.get('pack') || 'para amor propio',
+      oldQuantity: urlParams.get('old_quantity') || '',
+      newQuantity: urlParams.get('new_quantity') || '1 botella'
+    };
+    
+    showCartUpdateModal(productData);
+    
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  
+  // Listen for Shopify cart API responses
+  if (typeof Shopify !== 'undefined' && Shopify.cart) {
+    const originalAddItem = Shopify.cart.addItem;
+    if (originalAddItem) {
+      Shopify.cart.addItem = function(...args) {
+        return originalAddItem.apply(this, args).then(response => {
+          // Check if quantity was adjusted
+          if (response && response.status === 200) {
+            const data = response.json ? response.json() : response;
+            // Handle quantity adjustments if needed
+          }
+          return response;
+        });
+      };
+    }
+  }
+});
 

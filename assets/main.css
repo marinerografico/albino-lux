@@ -80,3 +80,49 @@ body {
   filter: blur(0);
   transform: scale(1);
 }
+
+/* Cart Update Modal Styles */
+#cart-update-modal {
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+#cart-update-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#cart-update-modal:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart-update-content {
+  animation: modalFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cart-update-content.fade-out {
+  animation: modalFadeOut 0.3s ease-in forwards;
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.95);
+  }
+}
