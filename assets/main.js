@@ -104,29 +104,20 @@ document.addEventListener('DOMContentLoaded', () => {
     selectPack(firstPack, 'pack1');
   }
   
-  // Suppress fetch errors from Shopify scripts (development only)
+  // Suppress known Shopify development fetch errors (only for specific URLs)
   const originalFetch = window.fetch;
   window.fetch = function(...args) {
     const url = args[0];
-    if (typeof url === 'string' && url.includes('private_access_tokens')) {
-      // Return a rejected promise silently for development
-      return Promise.reject(new Error('Suppressed development error'));
+    // Only suppress known development endpoints
+    if (typeof url === 'string' && (
+      url.includes('private_access_tokens') ||
+      url.includes('/sf_private_access_tokens')
+    )) {
+      // Silently reject - these are development-only endpoints
+      return Promise.reject(new Error('Suppressed: Development endpoint'));
     }
-    return originalFetch.apply(this, args).catch(error => {
-      // Suppress known development errors
-      if (error.message && error.message.includes('Failed to fetch')) {
-        const errorUrl = args[0];
-        if (typeof errorUrl === 'string' && (
-          errorUrl.includes('private_access_tokens') ||
-          errorUrl.includes('sentry') ||
-          errorUrl.includes('breadcrumb')
-        )) {
-          // Silently ignore these development errors
-          return Promise.reject(new Error('Suppressed development error'));
-        }
-      }
-      throw error;
-    });
+    // For all other requests, use original fetch
+    return originalFetch.apply(this, args);
   };
 });
 
