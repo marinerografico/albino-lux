@@ -2,10 +2,10 @@
   <a href="{{ routes.root_url }}" class="hover:opacity-80 transition-opacity lowercase leading-none text-3xl font-bold text-neutral-900 tracking-tighter">
     albino.
   </a>
-  <a href="{{ routes.cart_url }}" class="cart-link text-xs text-neutral-900 hover:opacity-70 transition-opacity lowercase tracking-wide font-medium">
+  <button onclick="toggleCart()" class="cart-link text-xs text-neutral-900 hover:opacity-70 transition-opacity lowercase tracking-wide font-medium">
     <span class="cart-text">ritual</span>
     <span class="cart-count hidden">(<span id="cart-item-count">0</span>)</span>
-  </a>
+  </button>
 </nav>
 
 {% schema %}

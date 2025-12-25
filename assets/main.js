@@ -136,11 +136,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 newQuantity: addedItem.quantity + ' botella' + (addedItem.quantity > 1 ? 's' : '')
               });
             } else {
-              // Success - update cart count and redirect to cart
+              // Success - update cart count and show cart modal
               if (typeof updateCartCount === 'function') {
                 updateCartCount();
               }
-              window.location.href = '/cart';
+              // Show cart modal instead of redirecting
+              if (typeof toggleCart === 'function') {
+                toggleCart();
+              } else {
+                window.location.href = '/cart';
+              }
             }
           });
       })
@@ -260,10 +265,175 @@ function updateCartCount() {
       } else {
         if (cartCountSpan) cartCountSpan.classList.add('hidden');
       }
+      
+      // Update cart modal if open
+      if (typeof loadCartModal === 'function') {
+        loadCartModal(cart);
+      }
     })
     .catch(error => {
       // Silently fail if cart is not available
     });
+}
+
+// Load cart items into modal
+function loadCartModal(cart) {
+  const container = document.getElementById('cart-items-container');
+  const emptyMessage = document.getElementById('cart-empty-message');
+  const summary = document.getElementById('cart-summary');
+  const checkoutBtn = document.getElementById('cart-checkout-btn');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const totalEl = document.getElementById('cart-total');
+  
+  if (!container) return;
+  
+  // Clear container
+  container.innerHTML = '';
+  
+  if (cart.items && cart.items.length > 0) {
+    // Hide empty message
+    if (emptyMessage) emptyMessage.style.display = 'none';
+    if (summary) summary.classList.remove('hidden');
+    if (checkoutBtn) checkoutBtn.classList.remove('hidden');
+    
+    // Format money
+    const formatMoney = (cents) => {
+      return new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2
+      }).format(cents / 100);
+    };
+    
+    // Render items
+    cart.items.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'flex items-center gap-4 p-4 border border-neutral-100 rounded-2xl bg-neutral-50/50 hover:border-neutral-200 transition-colors';
+      itemDiv.innerHTML = `
+        <div class="h-16 w-16 shrink-0 bg-white rounded-xl overflow-hidden border border-neutral-100 flex items-center justify-center">
+          <img src="${item.image}" alt="${item.title}" class="h-full w-auto object-cover mix-blend-multiply opacity-90">
+        </div>
+        <div class="flex-1 min-w-0">
+          <h4 class="text-sm font-semibold text-neutral-900 truncate">${item.product_title}</h4>
+          ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="text-xs text-neutral-500 truncate mt-0.5">${item.variant_title}</p>` : ''}
+          <div class="flex items-center gap-3 mt-2">
+            <button onclick="updateCartItemQuantity('${item.key}', ${item.quantity - 1})" class="text-neutral-400 hover:text-neutral-900 transition-colors text-xs">−</button>
+            <span class="text-xs text-neutral-600 font-medium">${item.quantity}</span>
+            <button onclick="updateCartItemQuantity('${item.key}', ${item.quantity + 1})" class="text-neutral-400 hover:text-neutral-900 transition-colors text-xs">+</button>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-semibold text-neutral-900 block">${formatMoney(item.line_price)}</span>
+          <span class="text-[10px] text-neutral-400 font-medium">${item.quantity} ${item.quantity === 1 ? 'ud.' : 'uds.'}</span>
+          <button onclick="removeCartItem('${item.key}')" class="text-[10px] text-neutral-400 hover:text-neutral-900 transition-colors mt-1 block">eliminar</button>
+        </div>
+      `;
+      container.appendChild(itemDiv);
+    });
+    
+    // Update totals
+    if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
+    if (totalEl) totalEl.textContent = formatMoney(cart.total_price);
+  } else {
+    // Show empty message
+    if (emptyMessage) emptyMessage.style.display = 'block';
+    if (summary) summary.classList.add('hidden');
+    if (checkoutBtn) checkoutBtn.classList.add('hidden');
+  }
+}
+
+// Cart Modal Toggle
+function toggleCart() {
+  const modal = document.getElementById('cart-modal');
+  const backdrop = document.getElementById('cart-backdrop');
+  const content = document.getElementById('cart-content');
+  
+  if (!modal) return;
+  
+  if (modal.classList.contains('hidden')) {
+    // Open
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    // Load cart data
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        loadCartModal(cart);
+        // Small delay to allow display:block to apply before opacity transition
+        setTimeout(() => {
+          if (backdrop) backdrop.classList.remove('opacity-0');
+          if (content) {
+            content.classList.remove('opacity-0', 'scale-95');
+            content.classList.add('opacity-100', 'scale-100');
+          }
+        }, 10);
+      })
+      .catch(error => {
+        console.error('Error loading cart:', error);
+      });
+  } else {
+    // Close
+    if (backdrop) backdrop.classList.add('opacity-0');
+    if (content) {
+      content.classList.remove('opacity-100', 'scale-100');
+      content.classList.add('opacity-0', 'scale-95');
+    }
+    
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 300);
+  }
+}
+
+// Update cart item quantity
+function updateCartItemQuantity(key, quantity) {
+  if (quantity < 1) {
+    removeCartItem(key);
+    return;
+  }
+  
+  fetch('/cart/change.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: key,
+      quantity: parseInt(quantity)
+    })
+  })
+  .then(response => response.json())
+  .then(cart => {
+    loadCartModal(cart);
+    updateCartCount();
+  })
+  .catch(error => {
+    console.error('Error updating cart:', error);
+  });
+}
+
+// Remove cart item
+function removeCartItem(key) {
+  fetch('/cart/change.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: key,
+      quantity: 0
+    })
+  })
+  .then(response => response.json())
+  .then(cart => {
+    loadCartModal(cart);
+    updateCartCount();
+  })
+  .catch(error => {
+    console.error('Error removing item:', error);
+  });
 }
 
 // Listen for Shopify cart update events
