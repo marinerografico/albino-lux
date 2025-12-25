@@ -64,7 +64,7 @@
         "settings": {
           "product": "valenton",
           "product_url": "shopify://products/valenton",
-          "bottle_image": "shopify://shop_images/A_conceptual_editorial_202512252301_2d25fbe9-db87-48dc-b670-4647e412ca3c.png",
+          "bottle_image": "shopify://shop_images/botella_por_delante_2.png",
           "bottle_alt": "Botella Albino Valentón",
           "edition_number": "edición 001",
           "edition_badge": "lanzamiento",
@@ -118,6 +118,14 @@
           "technical_sheet_link": "",
           "technical_sheet_text": "Ver Ficha Técnica"
         }
+      },
+      "cart-update-modal": {
+        "type": "cart-update-modal",
+        "settings": {}
+      },
+      "cart-modal": {
+        "type": "cart-modal",
+        "settings": {}
       }
     },
     "content_for_index": []
