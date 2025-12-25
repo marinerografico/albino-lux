@@ -1,4 +1,4 @@
-<section class="w-full max-w-5xl pt-24 pr-6 pb-24 pl-6 space-y-16">
+<section class="w-full max-w-5xl pt-32 pr-6 pb-32 pl-6 space-y-20">
   <div class="text-center reveal-text">
     <span class="text-xs tracking-widest uppercase text-neutral-400 font-medium">
       {{ section.settings.section_label | default: "manifiesto valentón" }}
@@ -8,10 +8,10 @@
     </h2>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
     {% for block in section.blocks %}
       {% if block.type == 'manifesto_card' %}
-        <div class="group p-8 border border-neutral-100 hover:border-neutral-900 transition-colors duration-500 rounded-lg reveal-text {% if forloop.index > 1 %}delay-{{ forloop.index | times: 100 }}{% endif %}">
+        <div class="group p-10 border border-neutral-100 hover:border-neutral-900 transition-colors duration-500 rounded-lg reveal-text {% if forloop.index > 1 %}delay-{{ forloop.index | times: 100 }}{% endif %}">
           {% if block.settings.icon_name != blank %}
             {% render 'icon', icon_name: block.settings.icon_name %}
           {% endif %}

@@ -1,4 +1,4 @@
-<section class="min-h-screen flex flex-col md:flex-row md:py-0 bg-white pt-32 pr-6 pb-32 pl-6 relative items-center justify-center" id="product-section">
+<section class="min-h-screen flex flex-col md:flex-row md:py-0 bg-white pt-48 pr-6 pb-48 pl-6 relative items-center justify-center" id="product-section">
   <!-- Bottle Image Presentation -->
   <div class="md:w-1/2 md:h-screen flex overflow-hidden w-full h-[60vh] relative items-center justify-center">
     <div class="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white z-10 pointer-events-none"></div>
@@ -6,8 +6,8 @@
   </div>
 
   <!-- Product Details -->
-  <div class="w-full md:w-1/2 max-w-md space-y-12 md:pl-12 reveal-text">
-    <div class="md:text-left text-center space-y-4">
+  <div class="w-full md:w-1/2 max-w-md space-y-16 md:pl-16 reveal-text">
+    <div class="md:text-left text-center space-y-6">
       <div class="flex items-center justify-center md:justify-start space-x-3 mb-2">
         <span class="text-xs tracking-widest uppercase text-neutral-400 font-normal">
           {{ section.settings.edition_number | default: "edición 001" }}
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Custom Pack Selectors -->
-    <div class="space-y-4">
+    <div class="space-y-6">
       {% for block in section.blocks %}
         {% if block.type == 'pack' %}
           <button class="w-full group relative cursor-pointer text-left focus:outline-none" onclick="selectPack(this, 'pack{{ forloop.index }}')">
@@ -54,7 +54,7 @@
     </div>
 
     <!-- CTA -->
-    <div class="flex flex-col md:flex-row md:justify-start pt-8 gap-x-6 gap-y-6 items-center justify-center">
+    <div class="flex flex-col md:flex-row md:justify-start pt-12 gap-x-6 gap-y-6 items-center justify-center">
       <button class="group relative px-10 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-md w-full md:w-auto">
         <span class="uppercase text-xs font-medium tracking-widest z-10 relative">
           {{ section.settings.buy_button_text | default: "comprar" }}
