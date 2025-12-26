@@ -1,5 +1,5 @@
-<section class="flex flex-col pr-6 pl-6 relative items-center justify-center min-h-screen pt-40 md:pt-48 pb-12">
-  <div class="text-center space-y-16 z-10 max-w-4xl mt-12 md:mt-0 relative pb-24 md:pb-32">
+<section class="flex flex-col pr-6 pl-6 relative items-center justify-center min-h-[80vh]">
+  <div class="text-center space-y-10 z-10 max-w-4xl">
     <h1 class="text-4xl md:text-6xl tracking-tight text-neutral-900 font-normal leading-tight lowercase opacity-0" style="animation: fadeIn 1.5s ease-out forwards 0.2s">
       {{ section.settings.hero_title | default: "en un mundo que grita," }}
       <br>
@@ -8,14 +8,17 @@
     <p class="text-lg md:text-xl font-light tracking-wide text-neutral-500 max-w-lg mx-auto leading-relaxed opacity-0" style="animation: fadeIn 1.5s ease-out forwards 0.8s">
       {{ section.settings.hero_description | default: "cada edición es un gesto en blanco. cada gesto, una invitación a mirar por dentro." }}
     </p>
-    <div class="pt-12 opacity-0" style="animation: fadeIn 1.5s ease-out forwards 1.4s">
-      <a href="{{ section.settings.cta_link | default: '#product-section' }}" class="group relative inline-block px-9 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-lg">
+    <div class="pt-8 opacity-0" style="animation: fadeIn 1.5s ease-out forwards 1.4s">
+      <button onclick="document.getElementById('product-section').scrollIntoView({behavior: 'smooth'})" class="group relative px-9 py-4 overflow-hidden rounded-full bg-neutral-900 text-white hover:bg-neutral-800 transition-all duration-300 shadow-sm hover:shadow-lg">
         <span class="relative z-10 text-xs tracking-widest uppercase font-semibold">
           {{ section.settings.cta_text | default: "descubrir valentón" }}
         </span>
-      </a>
+      </button>
     </div>
   </div>
+
+
+
 </section>
 
 {% schema %}
@@ -43,15 +46,8 @@
     {
       "type": "text",
       "id": "cta_text",
-      "label": "CTA Link Text",
+      "label": "CTA Button Text",
       "default": "descubrir valentón"
-    },
-    {
-      "type": "url",
-      "id": "cta_link",
-      "label": "CTA Link URL",
-      "default": "#product-section",
-      "info": "Use #product-section to scroll to product section, or enter any URL"
     }
   ]
 }
